@@ -24,6 +24,7 @@ void on_center_button() {
 	} else {
 		pros::lcd::clear_line(2);
 	}
+	
 }
 
 /**
@@ -87,20 +88,38 @@ void autonomous() {
  * task, not resume it from where it left off.
  */
 void opcontrol() {
-	pros::Controller master(pros::E_CONTROLLER_MASTER);
-	pros::Motor left_mtr(1);
-	pros::Motor right_mtr(2);
 
-	while (true) {
-		pros::lcd::print(0, "%d %d %d", (pros::lcd::read_buttons() & LCD_BTN_LEFT) >> 2,
-		                 (pros::lcd::read_buttons() & LCD_BTN_CENTER) >> 1,
-		                 (pros::lcd::read_buttons() & LCD_BTN_RIGHT) >> 0);
-		int left = master.get_analog(ANALOG_LEFT_Y);
-		int right = master.get_analog(ANALOG_RIGHT_Y);
+	int yMotion;
+	int xMotion;
 
-		left_mtr = left;
-		right_mtr = right;
+	while (true)
+	{
+
+		pros::lcd::set_text(1, std::to_string(topLeft.get_position()));
+		pros::lcd::set_text(2, std::to_string(topRight.get_position()));
+		pros::lcd::set_text(3, std::to_string(bottLeft.get_position()));
+		pros::lcd::set_text(4, std::to_string(bottRight.get_position()));
+
+		pros::Controller master(pros::E_CONTROLLER_MASTER);
+		// driving control code
+
+
+		yMotion = master.get_analog(pros::E_CONTROLLER_ANALOG_RIGHT_X); // ik this looks wrong, but it works
+		xMotion = master.get_analog(pros::E_CONTROLLER_ANALOG_LEFT_Y);
+
+
+		int right = -xMotion + yMotion; //-power + turn
+		int left = xMotion + yMotion;	// power + turn
+
+		topLeft.move(left); // Swap negatives if you want the bot to drive in the other direction
+		bottLeft.move(-left);
+		bottRight.move(right);
+		topRight.move(-right);
+		
+		//centerWheel.move(rotate);
+		pros::delay(1);
 
 		pros::delay(20);
 	}
+
 }
