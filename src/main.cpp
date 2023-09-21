@@ -3,6 +3,7 @@
 #include "pros/motors.hpp"
 #include <math.h>
 
+
 pros::Motor topLeft(10, false);
 pros::Motor topRight(13, true);
 pros::Motor bottLeft(17, true);
@@ -14,6 +15,7 @@ pros::Motor bottRight(15, false);
  * When this callback is fired, it will toggle line 2 of the LCD text between
  * "I was pressed!" and nothing.
  */
+
 void on_center_button() {
 	static bool pressed = false;
 	pressed = !pressed;
@@ -66,7 +68,10 @@ void competition_initialize() {}
  * will be stopped. Re-enabling the robot will restart the task, not re-start it
  * from where it left off.
  */
-void autonomous() {}
+void autonomous() {
+
+	pros::lcd::set_text(1, "THIS IS AUTON!");
+}
 
 /**
  * Runs the operator control code. This function will be started in its own task
