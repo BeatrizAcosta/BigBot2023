@@ -6,8 +6,9 @@
 
 pros::Motor topLeft(10, false);
 pros::Motor topRight(13, true);
-pros::Motor bottLeft(17, true);
-pros::Motor bottRight(15, false);
+pros::Motor bottLeft(9, true);
+pros::Motor bottRight(2, false);
+//pros::Motor Catapult();   //add port
 
 /**
  * A callback function for LLEMU's center button.
@@ -68,10 +69,62 @@ void competition_initialize() {}
  * If the robot is disabled or communications is lost, the autonomous task
  * will be stopped. Re-enabling the robot will restart the task, not re-start it
  * from where it left off.
+ * 
+ * 
+ * 
  */
+
+
+
 void autonomous() {
 
 	pros::lcd::set_text(1, "THIS IS AUTON!");
+
+	// BASIC MOVEMENTS
+	topLeft.move_velocity(-25);   //forward 
+	topRight.move_velocity(-25);
+	bottLeft.move_velocity(25);
+	bottRight.move_velocity(25);
+	pros::delay(5000);
+	topLeft.move_velocity(0);
+	topRight.move_velocity(0);
+	bottLeft.move_velocity(0);
+	bottRight.move_velocity(0);
+
+	topLeft.move_velocity(25);  //backwards 
+	topRight.move_velocity(25);
+	bottLeft.move_velocity(-25);
+	bottRight.move_velocity(-25);
+	pros::delay(5000);
+	topLeft.move_velocity(0);
+	topRight.move_velocity(0);
+	bottLeft.move_velocity(0);
+	bottRight.move_velocity(0);
+
+	topLeft.move_velocity(25);  //turn- counter clockwise 
+	topRight.move_velocity(-25);
+	bottLeft.move_velocity(-25);
+	bottRight.move_velocity(25);
+	pros::delay(5000);
+	topLeft.move_velocity(0);
+	topRight.move_velocity(0);
+	bottLeft.move_velocity(0);
+	bottRight.move_velocity(0);
+
+	topLeft.move_velocity(-25);  //turn- counter clockwise 
+	topRight.move_velocity(25);
+	bottLeft.move_velocity(25);
+	bottRight.move_velocity(-25);
+	pros::delay(5000);
+	topLeft.move_velocity(0);
+	topRight.move_velocity(0);
+	bottLeft.move_velocity(0);
+	bottRight.move_velocity(0);
+
+
+
+
+	
 }
 
 /**
@@ -103,7 +156,6 @@ void opcontrol() {
 		pros::Controller master(pros::E_CONTROLLER_MASTER);
 		// driving control code
 
-
 		yMotion = master.get_analog(pros::E_CONTROLLER_ANALOG_RIGHT_X); // ik this looks wrong, but it works
 		xMotion = master.get_analog(pros::E_CONTROLLER_ANALOG_LEFT_Y);
 
@@ -115,11 +167,28 @@ void opcontrol() {
 		bottLeft.move(-left);
 		bottRight.move(right);
 		topRight.move(-right);
+
+/**
+
+
+		if (master.get_digital(DIGITAL_R2))
+		{ // runs flywheel while holding R2 down
+
+			Catapult.move_velocity(20); // Changes flywheel velocity
+			Catapult.move_velocity(20);
+			pros::lcd::set_text(5, std::to_string(Catapult.get_actual_velocity()));
+			pros::lcd::set_text(6, std::to_string(Catapult.get_actual_velocity()));
+		}
+		else
+		{
+			Catapult.move_velocity(0);
+			Catapult.move_velocity(0);
+		}
+**/
 		
 		//centerWheel.move(rotate);
 		pros::delay(1);
 
 		pros::delay(20);
 	}
-
 }
